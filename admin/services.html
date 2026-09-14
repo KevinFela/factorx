@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactorX CMS | Services & Pricing</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark small">Factor<span>X</span></div>
+      <small>STUDIOS CMS</small>
+    </div>
+
+    <div class="topbar-actions">
+      <span id="adminEmail" class="admin-email"></span>
+      <button id="logoutButton" class="secondary-button">Logout</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="nav-item" href="dashboard.html">Dashboard</a>
+      <a class="nav-item active" href="services.html">Services & Pricing</a>
+      <a class="nav-item" href="portfolio.html">Portfolio</a>
+      <a class="nav-item" href="enquiries.html">Enquiries</a>
+      <a class="nav-item" href="settings.html">Settings</a>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="page-heading responsive-heading">
+        <div>
+          <p class="eyebrow">WEBSITE CONTENT</p>
+          <h1>Services & Pricing</h1>
+          <p class="muted">Edit packages, prices, features and visibility without touching the HTML.</p>
+        </div>
+        <button id="newServiceButton" class="primary-button">+ Add Service</button>
+      </div>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Total Services</span>
+          <strong id="totalServices">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Visible</span>
+          <strong id="visibleServices">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Hidden</span>
+          <strong id="hiddenServices">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Featured</span>
+          <strong id="featuredServices">—</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <div class="toolbar-field grow">
+            <label for="serviceSearch">Search</label>
+            <input id="serviceSearch" type="search" placeholder="Search services...">
+          </div>
+
+          <div class="toolbar-field">
+            <label for="serviceStatus">Status</label>
+            <select id="serviceStatus">
+              <option value="">All</option>
+              <option value="visible">Visible</option>
+              <option value="hidden">Hidden</option>
+              <option value="featured">Featured</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="serviceList" class="service-admin-list">
+          <div class="empty-state">Loading services...</div>
+        </div>
+
+        <p id="pageMessage" class="message" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <div id="serviceModal" class="cms-modal hidden">
+    <div class="cms-modal-backdrop" data-close-service-modal></div>
+
+    <section class="cms-modal-card service-editor-modal" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+      <div class="cms-modal-heading">
+        <div>
+          <p class="eyebrow">SERVICE EDITOR</p>
+          <h2 id="serviceModalTitle">Add Service</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-service-modal aria-label="Close">×</button>
+      </div>
+
+      <form id="serviceForm" class="editor-form">
+        <input id="serviceId" type="hidden">
+
+        <div class="form-grid two-columns">
+          <label>
+            Badge
+            <input id="badge" type="text" placeholder="Starter">
+          </label>
+
+          <label>
+            Service title *
+            <input id="title" type="text" required placeholder="One-page website">
+          </label>
+        </div>
+
+        <label>
+          Short description
+          <textarea id="shortDescription" rows="3" placeholder="A focused home for your business online."></textarea>
+        </label>
+
+        <div class="form-grid three-columns">
+          <label>
+            Numeric price
+            <input id="price" type="number" min="0" step="0.01" placeholder="2500">
+          </label>
+
+          <label>
+            Display price
+            <input id="priceLabel" type="text" placeholder="R2,500 or Custom">
+          </label>
+
+          <label>
+            Billing label
+            <input id="billingLabel" type="text" placeholder="Once-off / Monthly / Quote">
+          </label>
+        </div>
+
+        <label>
+          Features
+          <textarea id="features" rows="7" placeholder="One feature per line"></textarea>
+        </label>
+
+        <div class="form-grid two-columns">
+          <label>
+            Button text
+            <input id="buttonLabel" type="text" placeholder="Request a quote">
+          </label>
+
+          <label>
+            WhatsApp enquiry name
+            <input id="enquiryLabel" type="text" placeholder="One-page website">
+          </label>
+        </div>
+
+        <div class="form-grid two-columns">
+          <label>
+            Card colour
+            <select id="colourPreset">
+              <option value="orange">Orange</option>
+              <option value="blue">Blue</option>
+            </select>
+          </label>
+
+          <label>
+            Sort order
+            <input id="sortOrder" type="number" step="1" min="0" placeholder="10">
+          </label>
+        </div>
+
+        <div class="switch-grid">
+          <label class="switch-row">
+            <input id="active" type="checkbox" checked>
+            <span>
+              <strong>Visible on website</strong>
+              <small>Turn this off to hide the service without deleting it.</small>
+            </span>
+          </label>
+
+          <label class="switch-row">
+            <input id="featured" type="checkbox">
+            <span>
+              <strong>Featured on homepage</strong>
+              <small>Use this for the main packages you want highlighted first.</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary-button" data-close-service-modal>Cancel</button>
+          <button id="saveServiceButton" type="submit" class="primary-button">Save Service</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="services.js"></script>
+</body>
+</html>

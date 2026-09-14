@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactorX CMS | Portfolio</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark small">Factor<span>X</span></div>
+      <small>STUDIOS CMS</small>
+    </div>
+
+    <div class="topbar-actions">
+      <span id="adminEmail" class="admin-email"></span>
+      <button id="logoutButton" class="secondary-button">Logout</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="nav-item" href="dashboard.html">Dashboard</a>
+      <a class="nav-item" href="services.html">Services & Pricing</a>
+      <a class="nav-item active" href="portfolio.html">Portfolio</a>
+      <a class="nav-item" href="enquiries.html">Enquiries</a>
+      <a class="nav-item" href="settings.html">Settings</a>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="page-heading responsive-heading">
+        <div>
+          <p class="eyebrow">PROJECT SHOWCASE</p>
+          <h1>Portfolio</h1>
+          <p class="muted">Add websites and systems you’ve built, including screenshots and live links.</p>
+        </div>
+        <button id="newProjectButton" class="primary-button">+ Add Project</button>
+      </div>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Total Projects</span>
+          <strong id="totalProjects">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Visible</span>
+          <strong id="visibleProjects">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Featured</span>
+          <strong id="featuredProjects">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Hidden</span>
+          <strong id="hiddenProjects">—</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <div class="toolbar-field grow">
+            <label for="projectSearch">Search</label>
+            <input id="projectSearch" type="search" placeholder="Search project or client...">
+          </div>
+
+          <div class="toolbar-field">
+            <label for="projectStatus">Status</label>
+            <select id="projectStatus">
+              <option value="">All</option>
+              <option value="visible">Visible</option>
+              <option value="featured">Featured</option>
+              <option value="hidden">Hidden</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="portfolioGrid" class="portfolio-admin-grid">
+          <div class="empty-state">Loading portfolio...</div>
+        </div>
+
+        <p id="pageMessage" class="message" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <div id="projectModal" class="cms-modal hidden">
+    <div class="cms-modal-backdrop" data-close-project-modal></div>
+
+    <section class="cms-modal-card portfolio-editor-modal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+      <div class="cms-modal-heading">
+        <div>
+          <p class="eyebrow">PROJECT EDITOR</p>
+          <h2 id="projectModalTitle">Add Project</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-project-modal aria-label="Close">×</button>
+      </div>
+
+      <form id="projectForm" class="editor-form">
+        <input id="projectId" type="hidden">
+        <input id="existingImagePath" type="hidden">
+
+        <div class="portfolio-editor-layout">
+          <div>
+            <label class="upload-zone" for="projectImage">
+              <input id="projectImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+              <span class="upload-zone-icon">＋</span>
+              <strong>Choose screenshot</strong>
+              <small>JPG, PNG, WEBP or GIF. Maximum 10MB.</small>
+            </label>
+
+            <div id="projectPreviewWrap" class="project-preview-wrap hidden">
+              <img id="projectPreview" alt="Project preview">
+            </div>
+
+            <p id="imageStatus" class="muted image-status"></p>
+          </div>
+
+          <div class="editor-form">
+            <div class="form-grid two-columns">
+              <label>
+                Project title *
+                <input id="projectTitle" type="text" required placeholder="Eatery Flamingo">
+              </label>
+
+              <label>
+                Client name
+                <input id="clientName" type="text" placeholder="Eatery Flamingo">
+              </label>
+            </div>
+
+            <div class="form-grid two-columns">
+              <label>
+                Category
+                <input id="projectCategory" type="text" placeholder="Restaurant Website">
+              </label>
+
+              <label>
+                Live project URL
+                <input id="projectUrl" type="url" placeholder="https://example.co.za">
+              </label>
+            </div>
+
+            <label>
+              Short description
+              <textarea id="projectDescription" rows="4" placeholder="What you built and the result."></textarea>
+            </label>
+
+            <label>
+              Technologies
+              <textarea id="projectTechnologies" rows="4" placeholder="One technology per line&#10;HTML&#10;CSS&#10;JavaScript"></textarea>
+            </label>
+
+            <label>
+              Sort order
+              <input id="projectSortOrder" type="number" min="0" step="1" placeholder="10">
+            </label>
+
+            <div class="switch-grid">
+              <label class="switch-row">
+                <input id="projectActive" type="checkbox" checked>
+                <span>
+                  <strong>Visible on website</strong>
+                  <small>Hide it without deleting it.</small>
+                </span>
+              </label>
+
+              <label class="switch-row">
+                <input id="projectFeatured" type="checkbox">
+                <span>
+                  <strong>Featured project</strong>
+                  <small>Use this for your strongest work.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary-button" data-close-project-modal>Cancel</button>
+          <button id="saveProjectButton" type="submit" class="primary-button">Save Project</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="portfolio.js"></script>
+</body>
+</html>

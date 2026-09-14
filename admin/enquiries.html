@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactorX CMS | Enquiries</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark small">Factor<span>X</span></div>
+      <small>STUDIOS CMS</small>
+    </div>
+
+    <div class="topbar-actions">
+      <span id="adminEmail" class="admin-email"></span>
+      <button id="logoutButton" class="secondary-button">Logout</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="nav-item" href="dashboard.html">Dashboard</a>
+      <a class="nav-item" href="services.html">Services & Pricing</a>
+      <a class="nav-item" href="portfolio.html">Portfolio</a>
+      <a class="nav-item active" href="enquiries.html">Enquiries</a>
+      <a class="nav-item" href="settings.html">Settings</a>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="page-heading responsive-heading">
+        <div>
+          <p class="eyebrow">LEAD MANAGER</p>
+          <h1>Enquiries</h1>
+          <p class="muted">Track website leads from first contact through quote and conversion.</p>
+        </div>
+      </div>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>New</span>
+          <strong id="newCount">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Contacted</span>
+          <strong id="contactedCount">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Quoted</span>
+          <strong id="quotedCount">—</strong>
+        </article>
+        <article class="stat-card">
+          <span>Won</span>
+          <strong id="wonCount">—</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <div class="toolbar-field grow">
+            <label for="enquirySearch">Search</label>
+            <input id="enquirySearch" type="search" placeholder="Name, phone, email or service...">
+          </div>
+
+          <div class="toolbar-field">
+            <label for="enquiryStatus">Status</label>
+            <select id="enquiryStatus">
+              <option value="">All statuses</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="quoted">Quoted</option>
+              <option value="won">Won</option>
+              <option value="lost">Lost</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="enquiryList" class="enquiry-admin-list">
+          <div class="empty-state">Loading enquiries...</div>
+        </div>
+
+        <p id="pageMessage" class="message" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <div id="enquiryModal" class="cms-modal hidden">
+    <div class="cms-modal-backdrop" data-close-enquiry-modal></div>
+
+    <section class="cms-modal-card enquiry-modal-card" role="dialog" aria-modal="true">
+      <div class="cms-modal-heading">
+        <div>
+          <p class="eyebrow">ENQUIRY DETAILS</p>
+          <h2 id="enquiryModalTitle">Lead</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-enquiry-modal aria-label="Close">×</button>
+      </div>
+
+      <div id="enquiryDetails" class="enquiry-details"></div>
+
+      <div class="enquiry-status-editor">
+        <label>
+          Status
+          <select id="modalStatus">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="quoted">Quoted</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+        <button id="saveStatusButton" class="primary-button" type="button">Save Status</button>
+      </div>
+
+      <div class="modal-actions">
+        <button id="whatsappButton" class="whatsapp-button" type="button">WhatsApp</button>
+        <button id="emailButton" class="secondary-button" type="button">Email</button>
+        <button id="deleteEnquiryButton" class="danger-button" type="button">Delete</button>
+        <button type="button" class="secondary-button" data-close-enquiry-modal>Close</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="enquiries.js"></script>
+</body>
+</html>

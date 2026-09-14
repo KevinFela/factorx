@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactorX CMS | Login</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-body">
+  <main class="login-shell">
+    <section class="login-card">
+      <div class="brand-lockup">
+        <div class="brand-mark">Factor<span>X</span></div>
+        <small>STUDIOS CMS</small>
+      </div>
+
+      <p class="eyebrow">ADMIN LOGIN</p>
+      <h1>Manage FactorX Studios</h1>
+      <p class="muted">Sign in to manage services, pricing, enquiries, portfolio and reviews.</p>
+
+      <form id="loginForm" class="login-form">
+        <label>
+          Email
+          <input id="email" type="email" autocomplete="email" required>
+        </label>
+
+        <label>
+          Password
+          <input id="password" type="password" autocomplete="current-password" required>
+        </label>
+
+        <button id="loginButton" class="primary-button" type="submit">Sign In</button>
+        <p id="loginMessage" class="message" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

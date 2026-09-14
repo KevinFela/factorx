@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#059669">
+  <meta name="description" content="Selected websites and digital projects by FactorX Studios.">
+  <title>Portfolio | FactorX Studios</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="topbar">
+    <div class="container top-inner">
+      <a href="https://wa.me/27764267368" target="_blank" rel="noopener">076 426 7368 · WhatsApp</a>
+      <a class="top-cta" href="contact.html">Start your project</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">Factor<span>X</span> <small>STUDIOS</small></a>
+      <button id="menu-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Open navigation">☰</button>
+
+      <nav id="nav-menu" hidden>
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="portfolio.html" aria-current="page">Portfolio</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="intro">
+      <span class="eyebrow">OUR WORK</span>
+      <h1>Projects built to move businesses forward.</h1>
+      <p>Selected websites and digital projects by FactorX Studios.</p>
+    </section>
+
+    <section id="public-portfolio-grid" class="public-portfolio-grid" aria-live="polite">
+      <div class="portfolio-loading">Loading projects...</div>
+    </section>
+
+    <section class="panel page-cta">
+      <span class="eyebrow">YOUR PROJECT COULD BE NEXT</span>
+      <h2>Ready to build something?</h2>
+      <p>Tell us what you need and we’ll shape the right solution around your business.</p>
+      <a class="contact-button" href="contact.html">Start your project</a>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="index.html">Factor<span>X</span> <small>STUDIOS</small></a>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p>© <span id="year"></span> FactorX Studios · South Africa</p>
+  </footer>
+
+  <a class="floating-chat" href="https://wa.me/27764267368" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="back-top" href="#" aria-label="Back to top">↑</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="public-cms.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
