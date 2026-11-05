@@ -35,7 +35,7 @@ function escapeHtml(value = '') {
 }
 
 function formatDateTime(value) {
-  if (!value) return '—';
+  if (!value) return 'Not provided';
 
   return new Date(value).toLocaleString('en-ZA', {
     day: '2-digit',
@@ -199,9 +199,9 @@ function openModal(item) {
   const rows = [
     ['Status', statusLabel(item.status)],
     ['Service', item.service_name || 'General enquiry'],
-    ['Name', item.client_name || '—'],
-    ['Phone', item.phone || '—'],
-    ['Email', item.email || '—'],
+    ['Name', item.client_name || 'Not provided'],
+    ['Phone', item.phone || 'Not provided'],
+    ['Email', item.email || 'Not provided'],
     ['Received', formatDateTime(item.created_at)],
     ['Source', item.source || 'website']
   ];
@@ -311,7 +311,7 @@ function openEmail(item) {
   if (!item.email) return;
 
   const subject =
-    `FactorX Studios — ${item.service_name || 'Project enquiry'}`;
+    `FactorX Studios, ${item.service_name || 'Project enquiry'}`;
 
   const body = [
     `Hi ${item.client_name || ''},`,

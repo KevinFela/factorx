@@ -6,7 +6,6 @@ const el = {
   activeServices: document.getElementById('activeServices'),
   newEnquiries: document.getElementById('newEnquiries'),
   portfolioCount: document.getElementById('portfolioCount'),
-  reviewCount: document.getElementById('reviewCount'),
   pageMessage: document.getElementById('pageMessage')
 };
 
@@ -52,19 +51,16 @@ async function loadDashboard() {
   const [
     activeServices,
     newEnquiries,
-    portfolioCount,
-    reviewCount
+    portfolioCount
   ] = await Promise.all([
     countRows('services', { column: 'active', value: true }),
     countRows('enquiries', { column: 'status', value: 'new' }),
-    countRows('portfolio_projects', { column: 'active', value: true }),
-    countRows('reviews', { column: 'active', value: true })
+    countRows('portfolio_projects', { column: 'active', value: true })
   ]);
 
   el.activeServices.textContent = activeServices;
   el.newEnquiries.textContent = newEnquiries;
   el.portfolioCount.textContent = portfolioCount;
-  el.reviewCount.textContent = reviewCount;
 }
 
 document.querySelectorAll('[data-coming-soon]').forEach(link => {

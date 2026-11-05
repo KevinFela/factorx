@@ -20,7 +20,7 @@
   </header>
 
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar"><a class="nav-item" href="pages.html">Pages & subpages</a>
       <a class="nav-item" href="dashboard.html">Dashboard</a>
       <a class="nav-item" href="services.html">Services & Pricing</a>
       <a class="nav-item" href="portfolio.html">Portfolio</a>
@@ -35,161 +35,17 @@
         <p class="muted">Change contact details and page text without editing HTML files.</p>
       </div>
 
+      <p class="muted">Edit page content here. Manage project screenshots in <a href="portfolio.html">Portfolio</a> and packages in <a href="services.html">Services & Pricing</a>.</p>
+      <p id="pageMessage" class="message" role="status" aria-live="polite">Connecting to your CMS…</p>
       <form id="settingsForm" class="settings-form">
-        <section class="panel settings-section">
-          <div class="panel-heading">
-            <h2>Business details</h2>
-            <p class="muted">These details are used across the public website.</p>
-          </div>
-
-          <div class="form-grid two-columns">
-            <label>
-              Business name
-              <input id="business_name" type="text" value="FactorX Studios">
-            </label>
-
-            <label>
-              Country
-              <input id="country" type="text" value="South Africa">
-            </label>
-
-            <label>
-              WhatsApp
-              <input id="whatsapp" type="text" value="+27 76 426 7368" placeholder="+27 76 426 7368">
-            </label>
-
-            <label>
-              Phone
-              <input id="phone" type="text" value="+27 76 426 7368">
-            </label>
-
-            <label class="full-span">
-              Email
-              <input id="email" type="email" placeholder="hello@factorx.co.za">
-            </label>
-          </div>
-        </section>
-
-        <section class="panel settings-section">
-          <div class="panel-heading">
-            <h2>Homepage</h2>
-            <p class="muted">Controls the main hero section on the homepage.</p>
-          </div>
-
-          <label>
-            Eyebrow
-            <input id="homepage_eyebrow" type="text">
-          </label>
-
-          <label>
-            Main heading
-            <input id="homepage_heading" type="text">
-          </label>
-
-          <label>
-            Introduction
-            <textarea id="homepage_intro" rows="4"></textarea>
-          </label>
-        </section>
-
-        <section class="panel settings-section">
-          <div class="panel-heading">
-            <h2>Services page</h2>
-          </div>
-
-          <label>
-            Eyebrow
-            <input id="services_eyebrow" type="text">
-          </label>
-
-          <label>
-            Main heading
-            <input id="services_heading" type="text">
-          </label>
-
-          <label>
-            Introduction
-            <textarea id="services_intro" rows="4"></textarea>
-          </label>
-        </section>
-
-        <section class="panel settings-section">
-          <div class="panel-heading">
-            <h2>About page</h2>
-          </div>
-
-          <label>
-            Eyebrow
-            <input id="about_eyebrow" type="text">
-          </label>
-
-          <label>
-            Main heading
-            <input id="about_heading" type="text">
-          </label>
-
-          <label>
-            Introduction
-            <textarea id="about_intro" rows="4"></textarea>
-          </label>
-
-          <label>
-            Story heading
-            <input id="about_story_heading" type="text">
-          </label>
-
-          <label>
-            Story paragraph 1
-            <textarea id="about_story_p1" rows="4"></textarea>
-          </label>
-
-          <label>
-            Story paragraph 2
-            <textarea id="about_story_p2" rows="4"></textarea>
-          </label>
-        </section>
-
-        <section class="panel settings-section">
-          <div class="panel-heading">
-            <h2>Contact page</h2>
-          </div>
-
-          <label>
-            Eyebrow
-            <input id="contact_eyebrow" type="text">
-          </label>
-
-          <label>
-            Main heading
-            <input id="contact_heading" type="text">
-          </label>
-
-          <label>
-            Introduction
-            <textarea id="contact_intro" rows="4"></textarea>
-          </label>
-
-          <label>
-            Form heading
-            <input id="contact_form_heading" type="text">
-          </label>
-
-          <label>
-            Form introduction
-            <textarea id="contact_form_intro" rows="4"></textarea>
-          </label>
-        </section>
-
-        <div class="settings-save-bar">
-          <p id="pageMessage" class="message" aria-live="polite"></p>
-          <button id="saveSettingsButton" type="submit" class="primary-button">Save Settings</button>
-        </div>
+        <fieldset id="settingsFields" disabled><label>Find a setting<input id="settingsSearch" type="search" placeholder="Search text, links or page names"></label><div id="settingsGroups"></div></fieldset>
+        <div class="settings-save-bar"><span id="changeCount">No unsaved changes</span><button id="saveSettingsButton" type="submit" class="primary-button" disabled>Save changes</button><button id="retrySettingsButton" type="button" class="secondary-button">Retry connection</button></div>
       </form>
     </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="settings.js"></script>
-</body>
+  <script src="../content-fields.js"></script><script src="settings.js"></script>
+<a class="public-site-link" href="../index.html"> View website</a></body>
 </html>

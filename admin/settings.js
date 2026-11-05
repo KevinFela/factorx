@@ -1,146 +1,108 @@
 const client = window.factorxSupabase;
-
-const keys = [
-  'business_name',
-  'country',
-  'whatsapp',
-  'phone',
-  'email',
-  'homepage_eyebrow',
-  'homepage_heading',
-  'homepage_intro',
-  'services_eyebrow',
-  'services_heading',
-  'services_intro',
-  'about_eyebrow',
-  'about_heading',
-  'about_intro',
-  'about_story_heading',
-  'about_story_p1',
-  'about_story_p2',
-  'contact_eyebrow',
-  'contact_heading',
-  'contact_intro',
-  'contact_form_heading',
-  'contact_form_intro'
-];
-
-const defaults = {
-  business_name: 'FactorX Studios',
-  country: 'South Africa',
-  whatsapp: '+27 76 426 7368',
-  phone: '+27 76 426 7368',
-  email: '',
-  homepage_eyebrow: 'WEB DESIGN & DEVELOPMENT, SOLVED.',
-  homepage_heading: 'Your business. Your next digital step.',
-  homepage_intro: 'Websites that bring your brand to life, with support to keep it moving.',
-  services_eyebrow: 'WHAT WE DO',
-  services_heading: 'Websites. Systems. Support.',
-  services_intro: "Choose a starting point. We'll shape the details around your business.",
-  about_eyebrow: 'MEET FACTORX',
-  about_heading: 'Design meets development.',
-  about_intro: 'An independent South African studio helping businesses build their place online.',
-  about_story_heading: 'Web design & development, solved.',
-  about_story_p1: 'FactorX Studios brings design and development together to turn business ideas into useful digital experiences. From your first website to a custom business tool, the starting point is understanding what you need.',
-  about_story_p2: 'We believe a good website should tell your story clearly, help people find what they need, and make it easy to take the next step.',
-  contact_eyebrow: "LET'S TALK",
-  contact_heading: 'Your next project starts here.',
-  contact_intro: 'Get in touch with FactorX Studios on WhatsApp.',
-  contact_form_heading: 'Tell us what you have in mind.',
-  contact_form_intro: 'Choose a service and tell us about your idea. Your enquiry will be saved first, then WhatsApp will open so you can continue the conversation.'
+const fields = window.factorxContentFields;
+const form = document.querySelector('#settingsForm');
+const fieldset = document.querySelector('#settingsFields');
+const groups = document.querySelector('#settingsGroups');
+const saveButton = document.querySelector('#saveSettingsButton');
+const message = document.querySelector('#pageMessage');
+const changeCount = document.querySelector('#changeCount');
+const initial = new Map();
+const loaded = new Map();
+let ready = false;
+let saving = false;
+const validLink = value => {
+  if (!value) return true;
+  if (/[\u0000-\u0020\\]/.test(value) || value.startsWith('//')) return false;
+  try { return ['https:','http:','mailto:','tel:'].includes(new URL(value, location.origin + '/').protocol); } catch { return false; }
 };
-
-const form = document.getElementById('settingsForm');
-const saveButton = document.getElementById('saveSettingsButton');
-const message = document.getElementById('pageMessage');
-const adminEmail = document.getElementById('adminEmail');
-const logoutButton = document.getElementById('logoutButton');
-
-async function requireAdmin() {
-  const { data: { session } } = await client.auth.getSession();
-
-  if (!session) {
-    window.location.href = 'index.html';
-    return null;
-  }
-
-  const { data: adminRow, error } = await client
-    .from('admins')
-    .select('user_id,email')
-    .eq('user_id', session.user.id)
-    .maybeSingle();
-
-  if (error || !adminRow) {
-    await client.auth.signOut();
-    window.location.href = 'index.html';
-    return null;
-  }
-
-  adminEmail.textContent = adminRow.email || session.user.email;
-  return session;
+const inputValue = field => {
+  const input = document.getElementById(field.key);
+  return field.type === 'boolean' ? String(input.checked) : input.value.trim();
+};
+function setValue(field,value) {
+  const input = document.getElementById(field.key);
+  if (field.type === 'boolean') input.checked = value !== 'false'; else input.value = value;
 }
-
-async function loadSettings() {
-  keys.forEach(key => {
-    const input = document.getElementById(key);
-    if (input) input.value = defaults[key] ?? '';
-  });
-
-  const { data, error } = await client
-    .from('site_settings')
-    .select('setting_key,setting_value')
-    .in('setting_key', keys);
-
-  if (error) throw error;
-
-  (data || []).forEach(row => {
-    const input = document.getElementById(row.setting_key);
-    if (input) input.value = row.setting_value ?? '';
-  });
+function changedFields() { return fields.filter(field => inputValue(field) !== initial.get(field.key)); }
+function updateChanges() {
+  const count = ready ? changedFields().length : 0;
+  changeCount.textContent = count ? `${count} unsaved ${count === 1 ? 'change' : 'changes'}` : 'No unsaved changes';
+  saveButton.disabled = !ready || saving || !count;
 }
-
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-
-  saveButton.disabled = true;
-  saveButton.textContent = 'Saving...';
-  message.textContent = '';
-
-  const rows = keys.map(key => ({
-    setting_key: key,
-    setting_value: document.getElementById(key)?.value.trim() || ''
-  }));
-
-  const { error } = await client
-    .from('site_settings')
-    .upsert(rows, { onConflict: 'setting_key' });
-
-  saveButton.disabled = false;
-  saveButton.textContent = 'Save Settings';
-
-  if (error) {
-    message.textContent = error.message;
-    message.className = 'message error';
-    return;
+function renderFields() {
+  const sections = new Map();
+  for (const field of fields) {
+    if (!sections.has(field.group)) {
+      const details = document.createElement('details'); details.className = 'panel content-group'; details.open = field.group === 'Business & branding';
+      const summary = document.createElement('summary'); summary.textContent = field.group; details.append(summary); groups.append(details); sections.set(field.group,details);
+    }
+    const row = document.createElement('div'); row.className = 'content-field'; row.dataset.search = `${field.group} ${field.label} ${field.default}`.toLowerCase();
+    const label = document.createElement('label'); label.htmlFor = field.key; label.textContent = field.label;
+    const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input'); input.id = field.key; input.name = field.key;
+    if (field.type === 'textarea') {input.rows = 3;input.maxLength = 5000;} else {input.type = field.type === 'boolean' ? 'checkbox' : ['email','color','number'].includes(field.type) ? field.type : 'text';input.maxLength = 2000;}
+    if (field.type === 'number') {input.min = 1;input.max = 12;input.step = 1;}
+    row.append(label,input);
+    if (field.type === 'link') {const hint=document.createElement('small');hint.textContent='Use a page such as contact.html, or a complete https:// address.';row.append(hint);}
+    if (field.type === 'image') {
+      const upload = document.createElement('input'); upload.type='file'; upload.accept='image/png,image/jpeg,image/webp,image/gif';upload.setAttribute('aria-label',`Upload ${field.label.toLowerCase()}`);
+      upload.addEventListener('change',()=>uploadImage(field,upload));row.append(upload);
+    }
+    sections.get(field.group).append(row);
   }
-
-  message.textContent = 'Settings saved. Refresh the public website to see the changes.';
-  message.className = 'message success';
-});
-
-logoutButton.addEventListener('click', async () => {
-  await client.auth.signOut();
-  window.location.href = 'index.html';
-});
-
-(async () => {
-  const session = await requireAdmin();
-  if (!session) return;
-
+}
+async function uploadImage(field,upload) {
+  const file=upload.files[0];if (!file || !ready) return;
+  const types={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'};
+  if (!types[file.type] || file.size > 10485760) {message.textContent='Choose a PNG, JPG, WebP or GIF smaller than 10 MB.';upload.value='';return;}
+  saving=true;fieldset.disabled=true;updateChanges();message.textContent='Uploading image…';
   try {
-    await loadSettings();
-  } catch (error) {
-    message.textContent = error.message;
-    message.className = 'message error';
-  }
-})();
+    const path=`branding/${crypto.randomUUID()}.${types[file.type]}`;
+    const {error}=await client.storage.from('factorx-media').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;
+    document.getElementById(field.key).value=client.storage.from('factorx-media').getPublicUrl(path).data.publicUrl;
+    message.textContent='Image uploaded. Save changes to use it on the website.';
+  } catch(error) {message.textContent=`Upload failed: ${error.message}`;}
+  finally {saving=false;fieldset.disabled=false;upload.value='';updateChanges();}
+}
+async function connect() {
+  ready=false;fieldset.disabled=true;saveButton.disabled=true;message.textContent='Connecting to your CMS…';
+  try {
+    if (!client) throw new Error('The CMS connection could not be loaded.');
+    const {data:{session},error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;
+    if(!session){location.href='index.html';return;}
+    const {data:admin,error:adminError}=await client.from('admins').select('user_id,email').eq('user_id',session.user.id).maybeSingle();
+    if(adminError)throw adminError;
+    if(!admin){await client.auth.signOut();location.href='index.html';return;}
+    document.querySelector('#adminEmail').textContent=admin.email || session.user.email;
+    const {data,error}=await client.from('site_settings').select('setting_key,setting_value').in('setting_key',fields.map(field=>field.key));if(error)throw error;
+    loaded.clear();initial.clear();for(const row of data || [])loaded.set(row.setting_key,row.setting_value);
+    for(const field of fields){const value=loaded.has(field.key)?loaded.get(field.key):field.default;setValue(field,value);initial.set(field.key,inputValue(field));}
+    ready=true;fieldset.disabled=false;message.textContent='Connected. Choose a section to edit its content.';updateChanges();
+  } catch(error){message.textContent=`Could not load settings. Nothing has been changed. ${error.message}`;message.className='message error';}
+}
+form.addEventListener('input',event=>{if(event.target.id!=='settingsSearch')updateChanges();});
+form.addEventListener('submit',async event=>{
+  event.preventDefault();if(!ready || saving)return;
+  const dirty=changedFields();if(!dirty.length)return;
+  for(const field of dirty){const value=inputValue(field);if((field.type==='link'||field.type==='image')&&!validLink(value)){message.textContent=`Check the address for ${field.label}.`;document.getElementById(field.key).focus();return;}if(field.type==='image'&&value&&!/^(https?:\/\/|\/?assets\/)/i.test(value)){message.textContent='Use an https image address or upload an image.';return;}}
+  saving=true;fieldset.disabled=true;updateChanges();message.textContent='Saving changes…';
+  try {
+    const keys=dirty.map(field=>field.key);
+    const {data:current,error:readError}=await client.from('site_settings').select('setting_key,setting_value').in('setting_key',keys);if(readError)throw readError;
+    const currentMap=new Map((current||[]).map(row=>[row.setting_key,row.setting_value]));
+    if(keys.some(key=>currentMap.get(key)!==loaded.get(key)))throw new Error('These settings changed in another session. Copy your edits, then reload before saving.');
+    const rows=dirty.map(field=>({setting_key:field.key,setting_value:inputValue(field)}));
+    const {error}=await client.from('site_settings').upsert(rows,{onConflict:'setting_key'});if(error)throw error;
+    for(const row of rows){loaded.set(row.setting_key,row.setting_value);initial.set(row.setting_key,row.setting_value);}
+    message.textContent='Changes saved. Refresh the website to see them.';message.className='message success';
+  } catch(error){message.textContent=`Could not save changes. ${error.message}`;message.className='message error';}
+  finally {saving=false;fieldset.disabled=false;updateChanges();}
+});
+document.querySelector('#settingsSearch').addEventListener('input',event=>{
+  const query=event.target.value.trim().toLowerCase();
+  groups.querySelectorAll('.content-group').forEach(group=>{let visible=0;group.querySelectorAll('.content-field').forEach(row=>{row.hidden=!row.dataset.search.includes(query);if(!row.hidden)visible++;});group.hidden=!visible;if(query&&visible)group.open=true;});
+});
+document.querySelector('#retrySettingsButton').addEventListener('click',()=>{if(ready&&changedFields().length){message.textContent='Save or copy your unsaved changes before reconnecting.';return;}connect();});
+document.querySelector('#logoutButton').addEventListener('click',async()=>{if(ready&&changedFields().length&&!confirm('Discard unsaved changes and sign out?'))return;await client.auth.signOut();location.href='index.html';});
+window.addEventListener('beforeunload',event=>{if(ready&&changedFields().length){event.preventDefault();event.returnValue='';}});
+renderFields();
+connect();

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactorX CMS | Pages</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark small">Factor<span>X</span></div>
+      <small>STUDIOS CMS</small>
+    </div>
+
+    <div class="topbar-actions">
+      <span id="adminEmail" class="admin-email"></span>
+      <button id="logoutButton" class="secondary-button">Logout</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar"><a class="nav-item active" href="pages.html">Pages & subpages</a>
+      <a class="nav-item" href="dashboard.html">Dashboard</a>
+      <a class="nav-item" href="services.html">Services & Pricing</a>
+      <a class="nav-item" href="portfolio.html">Portfolio</a>
+      <a class="nav-item" href="enquiries.html">Enquiries</a>
+      <a class="nav-item" href="settings.html">Settings</a>
+    </aside>
+
+    <main class="dashboard-main"><h1>Pages & subpages</h1><p>Create a page for a business, service or idea. Save drafts before publishing.</p><p id="pageMessage" class="message" role="status" aria-live="polite">Connecting…</p><div class="pages-layout"><section class="panel"><button id="newPage" class="primary-button" disabled>Add page</button><div id="pageList"></div></section><section class="panel"><form id="pageForm"><fieldset id="pageFields" disabled><label class="text">Page title<input id="f_title" type="text" required maxlength="160"></label><label class="text">Page address<input id="f_slug" type="text" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="80"></label><small>Use lowercase letters, numbers and hyphens. Changing the address changes the link to this page.</small><label class="select">Parent page<select id="f_parent_id"></select></label><small>Choose an existing site page or a custom top level page. Subpages of custom pages stay hidden while their parent is a draft.</small><label class="textarea">Introduction<textarea id="f_intro" rows="3" maxlength="2000"></textarea></label><label class="textarea">Page content<textarea id="f_body" rows="10" maxlength="50000"></textarea></label><small>Leave a blank line between paragraphs.</small><label class="text">Image address<input id="f_image_path" type="text"></label><label>Upload image<input id="pageUpload" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="imagePreview" hidden alt="Page image preview"><label class="text">Image description<input id="f_image_alt" type="text"></label><label class="text">Button text<input id="f_button_label" type="text"></label><label class="text">Button link<input id="f_button_url" type="text"></label><label class="textarea">Search description<textarea id="f_seo_description" rows="3" maxlength="2000"></textarea></label><label class="checkbox">Published<input id="f_published" type="checkbox"></label><label class="checkbox">Show in navigation<input id="f_show_in_nav" type="checkbox"></label><label class="number">Menu order<input id="f_sort_order" type="number"></label><div class="page-actions"><button id="savePage" class="primary-button" type="submit">Save page</button><a id="previewPage" class="secondary-button" hidden target="_blank" rel="noopener noreferrer">Preview saved page</a><button id="deletePage" class="secondary-button" type="button" hidden>Delete page</button></div></fieldset></form></section></div></main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="../page-parents.js"></script><script src="pages.js"></script>
+<a class="public-site-link" href="../index.html"> View website</a></body>
+</html>
